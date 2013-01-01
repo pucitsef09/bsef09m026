@@ -1,0 +1,133 @@
+﻿@{
+     Layout="~/shared/layout_admin.cshtml";
+
+     var db =  Database.Open("Online_shopping");
+     var query = "select * from categories";
+     var data = db.Query(query);
+
+      if(IsPost)
+        {
+             if(Request["submit_button"]=="Manage Users")
+             {
+                  Response.Redirect("~/Admin/ManageUsers");
+             }
+
+             if(Request["submit_button"]=="Mange Categories")
+             {
+                  Response.Redirect("~/Admin/category");
+             }
+        
+             if(Request["submit_button"]=="Manage Products")
+             {
+                  Response.Redirect("~/Admin/product_admin");
+             }
+        }
+
+    var pagetitle = "Category";
+}
+
+@section t1
+{
+    @pagetitle
+}
+
+<html>
+    <head> <title> Amin Panel </title>
+<style>
+        
+    #container{
+	width:100%;
+    height:auto;
+    background-color:#8398a7;
+    margin-top:2px;
+
+}
+
+    #left {
+     width:16%;
+     height: 350px;
+     background-color:#000;
+     float:left;
+     padding-top:10px;
+     padding-left:5px;
+     margin-top: 20px;
+}
+    
+    #center{
+      width:81.9%;
+      height: auto;
+      background-color:#808080;
+      float:left;
+      padding-left:5px;
+      padding-right:5px;
+      margin-top: 25px;
+}
+        
+        td{
+         font-family:  Cambria; 
+         width: 10%;  
+         text-align: center; 
+        }
+
+li{
+        margin-left: 22px;
+        color: #f9f6f6;
+        margin-top: 10px;
+        margin-bottom: 2px;
+        }
+        
+     .button{
+            height: 40px;
+            width: 190px;
+            margin: 15px;
+        }
+</style>
+     </head>
+
+
+<body style="background-color: #000">
+
+    <div id="container">
+
+           <form method="post">
+                   <div id="left">        
+                       <input type="submit" name="submit_button" value="Manage Users" class="button"/>
+                       <input type="submit" name="submit_button" value="Mange Categories" class="button"/>
+                       <input type="submit" name="submit_button" value="Manage Products" class="button"/>
+                   </div>
+           </form>
+
+        <div id="center">
+     
+                <div style="margin-left: 1020px; margin-top: 8px;">
+                    <a href="add_category.cshtml"> <img src="@Href("~/Images/add.png")" alt="Add Category" title="Add New Category"></a>
+                </div>
+              
+            <table border="1" style="margin-top: 10px;">
+
+                 <tr>
+                     <td> <b> Id </b></td> 
+                     <td> <b> Title </b></td>   
+                     <td> <b> Description </b></td>   
+                     <td> <b>Action </b></td>     
+                 </tr>
+
+                 @foreach(var row in data)
+                 {
+                     <tr>
+                        <td> @row.categoryid </td>
+                        <td> @row.title </td>
+                        <td> @row.description </td>
+                        <td> 
+                            <a href="@Href("editcategory", @row.categoryid)">  <img src="@Href("~/Images/edit.png")" alt="Edit" title="Edit Category"></a>
+                            <a href="@Href("deletecategory", @row.categoryid)"> <img src="@Href("~/Images/del.png")" alt="Delete" title="Delete Category" style="margin-left: 08px;"></a> </td>
+                     </tr>
+                 }
+
+             </table>
+
+        </div>
+   </div>
+
+</body>
+</html>

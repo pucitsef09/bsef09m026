@@ -1,0 +1,210 @@
+﻿@{
+     Layout="~/shared/layout.cshtml";
+     
+     Validation.RequireField("selectforsearch","Please Select a Option");
+     string value="";
+    var msg="";
+    var fetch=0;
+
+    var db = Database.Open("Online_shopping");
+    var selectQueryString= "select * from product order by Price asc";
+    var data=db.Query(selectQueryString);
+   
+    var selectQueryString1 = "select * from product order by Price asc OFFSET 0 ROWS  FETCH NEXT 3 ROWS ONLY";
+    var data1= db.Query(selectQueryString1);
+   
+    var selectQueryString2 = "select * from product order by Price asc OFFSET 3 ROWS FETCH NEXT 3 ROWS ONLY";
+    var data2= db.Query(selectQueryString2);
+   
+    var count=data.Count();
+    var price = "Price";
+    var Category = "Category";
+
+    if(IsPost)
+    {
+           if(Request.Form["submit_button"]=="Next")
+           {
+               if(App.offset2>count)
+               {     
+             <!--     msg+="the offset 1 += " + App.offset1;                  
+                    msg+="   and the offset 2 = " + App.offset2;-->  
+                    
+                    App.offset1 = App.offset1 + 6;
+                    App.offset2 = App.offset1 + 3;
+                    fetch=3;
+                    var selectQueryString3="select * from product order by Price asc OFFSET "+ @App.offset1 +" ROWS FETCH NEXT "+ fetch +" ROWS ONLY";
+                    data1= db.Query(selectQueryString3);
+                    var selectQueryString4="select * from product order by Price asc OFFSET "+ @App.offset2 +" ROWS FETCH NEXT "+ fetch +" ROWS ONLY";
+                    data2= db.Query(selectQueryString4);
+
+               }
+               else
+               {    
+
+                    App.offset1 = App.offset1 + 6;
+                    App.offset2 = App.offset1 + 3;
+
+                     <!--     msg+="the offset 1 += " + App.offset1;                  
+                    msg+="   and the offset 2 = " + App.offset2;-->  
+
+                    fetch=3;
+                    if(App.offset1>=0 && App.offset2>=0)
+                    {                                     
+                        var selectQueryString3="select * from product order by Price asc OFFSET "+ @App.offset1 +" ROWS FETCH NEXT "+ fetch +" ROWS ONLY";
+                        data1= db.Query(selectQueryString3);
+                        var selectQueryString4="select * from product order by Price asc OFFSET "+ @App.offset2 +" ROWS FETCH NEXT "+ fetch +" ROWS ONLY";
+                        data2= db.Query(selectQueryString4);                   
+                    }
+
+                    else
+                    {
+                       App.offset1 = App.offset1 + 6;
+                       App.offset2 = App.offset1 + 3;
+                    
+                       var selectQueryString3="select * from product order by Price asc OFFSET "+ @App.offset1 +" ROWS FETCH NEXT "+ fetch +" ROWS ONLY";
+                       data1= db.Query(selectQueryString3);
+                       var selectQueryString4="select * from product order by Price asc OFFSET "+ @App.offset2 +" ROWS FETCH NEXT "+ fetch +" ROWS ONLY";
+                       data2= db.Query(selectQueryString4);  
+                       <!--     msg+="the offset 1 += " + App.offset1;                  
+                    msg+="   and the offset 2 = " + App.offset2;-->  
+                    }
+                 }
+            }
+
+
+            if(Request.Form["submit_button"]=="Previous")
+            {
+                App.offset1=App.offset1-6;
+                App.offset2=App.offset2-6;
+                fetch=3;
+                if(App.offset1>=0 && App.offset2>=0)
+                {
+                    var selectQueryString3="select * from product order by Price asc OFFSET "+ @App.offset1 +" ROWS FETCH NEXT "+ fetch +" ROWS ONLY";
+                    data1= db.Query(selectQueryString3);
+                    var selectQueryString4="select * from product order by Price asc OFFSET "+ @App.offset2 +" ROWS FETCH NEXT "+ fetch +" ROWS ONLY";
+                    data2= db.Query(selectQueryString4);
+                }
+                else
+                {
+                    App.offset1=App.offset1+6;
+                    App.offset2=App.offset1+6;
+                }
+            }
+
+         
+          
+         if(Request.Form["submit_button"]=="Search")
+         {
+              var check = Request["selectforsearch"];
+              if(Validation.IsValid())
+              {
+                  if(check==price)
+                  {
+                      Response.Redirect("~/Search");
+                  }
+                  else if(check==Category)
+                  {
+                      Response.Redirect("~/Searchbycategory");
+                  }
+                  else
+                  {
+                      Validation.RequireField("selectforsearch","Select Option For Searching");
+                  }
+              }
+          }
+     }
+
+}
+
+
+  <!-- Searching Option-->
+    
+    <div style="margin-left: 50px; margin-top: 20px;">                  
+         <form method="post" action="" name="form">
+            <div style="font-family:Arial, Helvetica, sans-serif; color: #218416; border: initial; width: 500px; height: 10px; margin-left: 10px; margin-bottom: 2px; font-size: 12px;"> @Html.ValidationSummary()</div>
+            <p> <label class="text-form" style="color: #4d8b32"><b> Search By: </b></label>
+                <select id="selectforsearch" name="selectforsearch">
+                      <option disabled="disabled" selected="selected">Select Search</option>
+                     <option> Price </option>
+                     <option> Category </option>
+                </select>
+
+            <input type="submit" value="Search" name="submit_button" style="margin-left: 15px; background-color: #5c9c40; border-radius: 8px; padding-left: 15px; padding-right: 15px; padding-top: 5px; padding-bottom: 5px; color: #f4f8f3"/>   
+            </p>
+           </form> 
+
+     </div>
+
+
+  <!--Displaying Side bar menue-->
+ <section id="content"><div class="ic"></div>
+        <div class="main">
+            <div class="container_12">
+                <div class="wrapper">
+                	<article class="grid_3">
+                    	<h3 class="p1">Services List</h3>
+                        <ul class="list-1">
+                 
+                           <!--Reading Data Base-->
+                            @{
+                                 var query_cat = "select distinct Cateogory from product";
+                                 var data_cat = db.Query(query_cat);
+                            } 
+                           
+                            <!-- Display Categories after reading Data Base-->
+                            @foreach(var item in data_cat)
+                            {
+                                <li> <a href="/specificproduct/@item.Cateogory"> @item.Cateogory</a></li>
+                             
+                            }
+
+                        </ul>              
+                    </article>
+
+                    <!--Dispaly Images after reading from Data Base--> 
+ 
+              <form method="post">
+                    <article class="grid_9">
+
+                                  <table>                  
+                  
+                       <tr>
+                          @foreach(var row in data1)
+                            {
+                               <td>
+                                    <p style="margin-left: 70px;">@row.Productname</p>
+                                     <a href="/ProductInfo/@row.Productid">
+                                    <img src=@Href(row.Image) alt="Image" style="margin-bottom: 35px; float: left;  margin-right: 35px; height: 220px; width: 200px;"/></a> 
+                                    <p style="margin-left: 70px;"><b>$</b>@row.Price</p>
+                               </td>
+                           }
+                        </tr>
+                         
+                       <tr><td><br></td></tr>                        
+                       
+                       <tr>                                                      
+                           @foreach(var row in data2)
+                            {
+                                <td>                                
+                                    <p style="margin-left: 70px;">@row.Productname</p>
+                                    <a href="/ProductInfo/@row.Productid">
+                                    <img src=@Href(row.Image) alt="Image" style="margin-bottom: 35px;float: left;  margin-right: 35px;  height: 220px; width: 200px;"/></a>
+                                    <p style="margin-left: 70px;"><b>$</b>@row.Price</p>
+                                </td>         
+                            }
+                       </tr>
+                       
+             </table>
+                    </article>
+
+                   <div style="margin-left: 550px;" class="mybutton">
+                     <input name="submit_button" type="submit" value="Next" class="button"/>
+                     <input name="submit_button" type="submit" value="Previous" class="button"/>
+                   </div>
+
+             </form>
+
+                </div>
+            </div>
+        </div>
+    </section>

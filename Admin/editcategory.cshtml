@@ -1,0 +1,55 @@
+﻿@{
+      Layout="~/shared/layout_admin.cshtml";
+      var db = Database.Open("Online_shopping");
+      var id = UrlData[0];
+      var categoryid = id.AsInt();
+     
+      var query = "select * from categories where categoryid = @0";
+      var category = db.QuerySingle(query, categoryid);
+      
+      var title =  category.title ;
+      var description = category.description; 
+      
+      if(IsPost)
+      {    
+                var utitle = Request["title"];
+                var udescription = Request ["description"];
+                
+                var updatequery ="update categories set title=@0, description=@1 where categoryid=@2 ";
+                db.Execute(updatequery,utitle,udescription,categoryid);
+                Response.Redirect("~/Admin/category");
+
+      }
+     
+      var pagetitle = "Edit Category";
+}
+@section t1
+{
+    @pagetitle
+}
+  
+
+
+
+    <form method="post" action="" name="form" style="background-color: #bbdfc0; border: groove; margin-top: 10px; margin-left: 300px; margin-right: 300px; height: 250px; width: 500px; margin-top: 80px; padding-left: 50px; padding-top: 40px;"> 
+       
+            <div style="font-family: Arial; color: #218416; border:initial; width: 400px; height: 20px; margin-left: 4px;"> @Html.ValidationSummary()</div>
+        
+        <table>   
+               <tr>
+                 <td><label><span class="text-form"> Category Title:</span></label></td>
+                 <td><input type="text" name="title" id="title" value=@title></td>
+               </tr>
+               
+
+              <tr>
+                 <td><label><span class="text-form"> Discription:</span></label></td>
+                 <td><textarea rows="4" cols="38" name="description" id="description"> @description
+                 </textarea></td>
+              </tr>
+         </table>   
+              </br>
+              
+              <p><input type="submit" value="Update" name="submit"  style="background-color: #22ad3e;margin-left: 180px; color: #fcf4f4; font-family: 'Bodoni MT'; font-size: 16px;border-radius: 10px; padding-left: 12px; padding-right: 12px; padding-top: 5px; padding-bottom: 5px;"/></p>
+		
+   </form>

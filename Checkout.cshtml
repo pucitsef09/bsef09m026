@@ -1,0 +1,135 @@
+﻿@{
+    
+    if (!WebSecurity.IsAuthenticated)
+    {
+            string currentUrl = Request.Url.ToString();
+            Response.Redirect("~/login?sender=" + currentUrl);
+    }
+
+    Layout="~/shared/layout.cshtml";
+    var pagetitle = "Checkout";
+    var address1 = "";
+    var address2 = "";
+    var town = "";
+    var region = "";
+    var postalCode = "";
+    var country = "";
+
+    // Redirect to Cart.cshtml if no cart exists in Session
+    if (Session["cart"] == null)
+    {
+          Response.Redirect("Cart");
+    }
+
+    // Get current cart from Session
+    Cart cart = (Cart)Session["cart"];
+
+    // Redirect to cart.cshtml if cart has no items
+    if(cart.Items.Count() == 0)
+    {
+            Response.Redirect("Cart");
+    }
+    
+    
+    // POST REQUEST HANDLER GOES HERE
+    if (IsPost) 
+    { 
+        address1 = Request["address1"]; 
+        address2 = Request["address2"]; 
+        town = Request["town"]; 
+        region = Request["region"]; 
+        postalCode = Request["postalCode"]; 
+        country = Request["country"];    
+        // Validate Delivery Details 
+         
+        if(Validation.IsValid()) 
+        { 
+            // Save Order 
+            var UserID = WebSecurity.GetUserId(WebSecurity.CurrentUserName); 
+             var db = Database.Open("Online_shopping"); 
+            var orderSql = "INSERT INTO Orders (UserId, OrderShipped, OrderTotal, " + "OrderDateTime, Address1, Address2, Town, " + "Region, PostalCode, Country) " + "VALUES ( @0, @1, @2, @3, @4, @5, @6, @7, @8, @9 )"; 
+            db.Execute(orderSql, UserID, false, 500, DateTime.Now, address1, address2, town, region, postalCode, country); 
+            var orderId = db.GetLastInsertId(); 
+           
+            foreach(var key in cart.Items) 
+            {
+                foreach(var item in cart.Items)
+                {  
+                    orderSql = "INSERT INTO OrderItems (OrderID, ProductID, Size, Price) VALUES (" +"@0, @1, @2, @3)"; 
+                    db.Execute(orderSql, orderId, item.ProductID, item.Size, item.Price); 
+                }
+            }  
+         }
+      } 
+      int count = 0;
+
+}
+@section t1
+{
+    @pagetitle
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+    </head>
+
+<body>
+        @Facebook.LikeButton(
+              href: "http://www.facebook.com/step.friends",
+              action: "recommend",
+              width: 250,
+              buttonLayout: "button_count",
+              showFaces: true,
+              colorScheme: "dark")
+
+   <table width="100%"  border="10" cellspacing="0" cellpadding="0" align="center">
+   <tr><td>
+      <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                <input type="hidden" name="cmd" value="_cart">
+                <input type="hidden" name="upload" value="1">
+                <input type="hidden" name="business"
+                value="tipix_1356776467_biz@pucit.edu.pk">
+
+        
+       <div> 
+            <h2 style="margin-left: 200px; color: #248f26; margin-bottom: 30px;font-family: Arial, Helvetica, sans-serif; font-weight:600; font-size: 30px;">Order Details</h2> 
+
+        
+           <table id="cartTable" style="margin-left: 300px; color: #000; width: 600"> 
+
+                    <tr>  
+                    <th style=" color: #000; text-align:left;width:20%;">Product Name</th> 
+                    <th style=" color: #000; text-align:left;width:20%;">Product Size</th> 
+                    <th style=" color: #000; text-align:left;width:20%;">Product Price</th> 
+                    </tr> 
+
+                    @foreach (var item in cart.Items) 
+                    { 
+                              count++;
+                              <input type="hidden" name="item_name_@count" value="@item.ProductID">
+                              <input type="hidden" name="amount_@count" value="@item.Price"/>
+
+                            <tr> 
+                            <td>@item.ProductID</td> 
+                            <td>@item.Size</td> 
+                            <td>£@item.Price</td> 
+                            </tr> 
+                    } 
+
+                <td><div class="mybutton" style="margin-left: 250px;margin-top: 20px">
+                     <input type="submit" name ="submit" class="button" />
+                </div>  </td>
+                   
+                 </tr> 
+        </table> 
+     </div>
+    </form>
+    </td></tr>
+  </table> 
+ 
+</body>
+</html>

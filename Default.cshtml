@@ -1,0 +1,185 @@
+﻿@{
+    Layout="~/shared/layout.cshtml";
+   
+    <!-- Data Base Connection-->
+    var db =  Database.Open("Online_shopping");
+    var query = "select * from product";
+    var data = db.Query(query);
+    var pagetitle = "Home";
+}
+
+
+@section t1
+{
+    @pagetitle
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="css/grid.css" type="text/css" media="screen">   
+    
+	<script src="js/jquery-1.6.3.min.js" type="text/javascript"></script>
+    <script src="js/cufon-yui.js" type="text/javascript"></script>
+    <script src="js/cufon-replace.js" type="text/javascript"></script>
+	<script src="js/Kozuka_Gothic_Pro_OpenType_300.font.js" type="text/javascript"></script>
+    <script src="js/Kozuka_Gothic_Pro_OpenType_500.font.js" type="text/javascript"></script> 
+    <script src="js/FF-cash.js" type="text/javascript"></script>      
+    <script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+	<script type="text/javascript" src="js/tms-0.3.js"></script>
+	<script type="text/javascript" src="js/tms_presets.js"></script>
+    <script src="js/jcarousellite_1.0.1.js" type="text/javascript"></script>
+         
+    <script type="text/javascript">
+		$(document).ready(function() { 
+			$('.carousel .jCarouselLite').jCarouselLite({ 
+				btnNext: '.carousel .next',
+				btnPrev: '.carousel .prev',
+				speed: 600,
+				easing: 'easeOutQuart',
+				vertical: false,
+				circular: false,
+				visible: 4,
+				start: 0,
+				scroll: 1
+			}); 
+		}); 
+	</script>
+	
+</head>
+
+<body id="page1">
+ 
+    <!-- Display Images For Sliding-->
+    <div class="row-bot">
+            <div class="row-bot-bg">
+                <div class="main">
+                    <div class="wrapper p6">          
+                    </div>
+                    <div class="slider-wrapper">
+                        <div class="slider">
+                            <ul class="items">
+                                <li>
+                                    <img src="images/apple.jpg" alt="Image">
+                                </li>
+                                <li>
+                                    <img src="images/ring.jpg" alt="Image">
+                                </li>    
+                                <li>
+                                    <img src="images/diamond.jpg" alt="Image">
+                                </li> 
+                                <li>
+                                    <img src="images/ipone.jpg" alt="Image">
+                                </li>                                
+                                <li>
+                                    <img src="images/laptop.jpg" alt="Image">
+                                </li>                              
+                                <li>
+                                    <img src="images/bag2.jpg" alt="Image">
+                                </li>                               
+                               
+                            </ul>
+                        </div>
+        			</div>
+                    
+                </div>
+            </div>
+        </div>  
+
+	<!--==============================aside================================-->
+    
+    <aside>
+    	<div class="carousel">
+	        <a class="prev"></a>
+            <a class="next"></a>
+            <div class="carousel-container">
+                <h3>Products</h3>
+                <div class="jCarouselLite">
+                    <ul class="carousel-list">
+
+                        <!--Image reading from data base-->
+                          @foreach(var row in data)
+                          {                                     
+                             <li>
+                                <div class="img-border">
+                                     <a href="/ProductInfo/@row.Productid">
+                                     <img src=@Href(row.Image) alt="Image" style="margin-bottom: 35px; margin-right: 30px;height: 140px; width: 200px;"/></a>    
+                                </div>
+                             </li>                                  
+                          }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!--==============================content================================-->
+    <section id="content"><div class="ic"></div>
+        <div class="main">
+            <div class="container_12">
+                <div class="wrapper">
+                    <article class="grid_4">
+                    	<h3 class="prev-indent-bot">Shortly About Us</h3>
+                        <h6 class="p1"> Welcome to e-marketplace</h6>
+                        <p class="img-indent-bot"> 
+
+Select from a wide range of products including mobile phones, laptops, and much more.
+
+Get a hassle free online shopping experience in Pakistan with nationwide home delivery of 100% original brands in Karachi, Lahore, Islamabad, Peshawar, Multan, Faisalabad, Quetta, Sargodha, Bahawalpur, Attock, Larkana, Hyderabad, Sukkur, Sahiwal or any other city in Pakistan, backed by the expertise, reliability and trust of TCS.
+
+Get the right deals, convenient payment options such as credit card, Easy Paisa or cash, exclusive offers and experience shopping that clicks.</p>
+                   
+                        
+                     </article>
+
+                     @{
+                             <!--Data Base Connection for reading distinct categories-->
+                              var query3 = "select distinct Cateogory from product";
+                              var data3 = db.Query(query3);
+                     }
+                    <article class="grid_4">
+                    	<div class="indent-left">
+                        	<h3 class="p1">Fresh Articles</h3>
+                            <ul class="list-1">
+                            	 @foreach(var item in data3)
+                                 {
+                                        <li> <a href="/specificproduct/@item.Cateogory"> @item.Cateogory</a></li>
+                             
+                                 }
+                            </ul>
+                        </div>
+                    </article>
+                    <article class="grid_4">
+                    	<div class="indent-left2">
+                        	<h3>Our Locations</h3>
+                            <figure class="prev-indent-bot"><img src="images/page1-img10.jpg" alt="Image"></figure>
+                            <a class="link-2" href="http://www.google.com/imgres?hl=en&tbo=d&biw=1366&bih=634&tbm=isch&tbnid=gSbmWIJGTXOpSM:&imgrefurl=http://www.cresset-travel.com/Asia/Pakistan/Lahore/The-Residency-Hotel-Lahore-Pakistan&docid=fJ6Ag9rgJCID3M&imgurl=http://www.cresset-travel.com/userfiles/The-Residency-Hotel-Lahore-Pakistan-MAP.gif&w=694&h=945&ei=_DWzULu-BpSYhQfh4YCoBw&zoom=1&iact=hc&vpx=4&vpy=122&dur=818&hovh=262&hovw=192&tx=95&ty=110&sig=103775605751093643574&page=1&tbnh=148&tbnw=108&start=0&ndsp=20&ved=1t:429,r:0,s:0,i:84"><p> Mall Road lahore, Pakistan</p></a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+	
+  <!--==============================footer=================================-->
+  <script type="text/javascript">
+		$(window).load(function(){
+			$('.slider')._TMS({
+				duration:800,
+				easing:'easeOutQuad',
+				preset:'diagonalExpand',
+				slideshow:5000
+			})
+		})
+	</script>
+
+	
+</body>
+</html>
+

@@ -1,0 +1,162 @@
+﻿
+@{
+      Layout="~/shared/layout.cshtml"; 
+      var pagetitle = "SignUp";
+
+      Validation.RequireField("Firstname","Please Enter First Name");
+      Validation.RequireField("Lastname","Please Enter Last Name");
+      Validation.RequireField("Username","Please Enter User Name");
+      Validation.RequireField("Email","Please Enter Email id");
+      Validation.RequireField("Password","Please Enter Password");
+      Validation.RequireField("Confirmedpassword","Please Enter Password");
+
+      var db = Database.Open("online_shopping");
+
+      if(IsPost)
+      {
+          if(Validation.IsValid())
+          {
+              var Firstname           = Request.Form["Firstname"];
+              var Lastname            = Request.Form["Lastname"];
+              var Username            = Request.Form["Username"];
+              var Email               = Request.Form["Email"];
+              var Password            = Request.Form["Password"];
+              var Confirmedpassword   = Request.Form["Confirmedpassword"];
+              var Gender              = Request.Form["select_gender"];
+              var Createddate         = DateTime.Now;
+            
+               if(WebSecurity.UserExists(Username))
+               {
+                   ModelState.AddError("Username", "An account with this name already exists.");
+               }
+               
+               else if(Password != Confirmedpassword)
+               {
+                    ModelState.AddError("Confirmedpassword", "The passwords do not match.");
+               }
+                
+               else
+               {
+                   if(ModelState.IsValid)
+                   {
+                        var insertquery = "Insert into users(Firstname, Lastname,Username,Email,Password,Confirmedpassword,Gender,Createddate)" + "values (@0,@1,@2,@3,@4,@5,@6,@7)";
+                        db.Execute(insertquery,Firstname,Lastname,Username,Email,Password,Confirmedpassword,Gender,Createddate);
+                   } 
+
+                  WebSecurity.CreateUserAndAccount(Username,Password);
+                  WebSecurity.Login(Username, Password);
+                  Response.Redirect("Default");
+              }
+              
+          }
+      }
+
+}
+@section t1
+{
+    @pagetitle
+}
+
+ <form id="signup" method="post" action="" style=" margin-top: 50px; margin-left: 300px; margin-right: 300px; height: 400px; width: 650px">                    
+   
+     <table border="1" style="margin-top: 40px; margin-left: 50px;">
+
+       <tr>
+           <td> <label class="text-form"> First Name: </label></td>
+           <td> <input type="text" id="Firstname" name="Firstname" value=@Request["firstname"] > </td>
+           <td> <span style="font-family: Calibri; color: #218416; text-align: center">@Html.ValidationMessage("firstname")</span> </td>
+       </tr>
+     
+       <tr>
+           <td> <label class="text-form"> Last Name: </label></td>
+           <td> <input type="text" id="Lastname" name="Lastname" value=@Request["lastname"]> </td>
+            <td> <span style="font-family: Calibri; color: #218416; text-align: center">@Html.ValidationMessage("lastname")</span> </td>
+       </tr>
+
+       <tr>
+           <td> <label class="text-form"> Username: </label></td>
+           <td> <input type="text" id="Username" name="Username" value=@Request["Username"]> </td>
+            <td> <span style="font-family: Calibri; color: #218416; text-align: center">@Html.ValidationMessage("Username")</span> </td>
+       </tr>
+
+       <tr>
+           <td> <label class="text-form"> Your Email: </label></td>
+           <td> <input type="text" id="Email" name="Email" value=@Request["email"]> </td>
+            <td> <span style="font-family: Calibri; color: #218416; text-align: center">@Html.ValidationMessage("email")</span> </td>
+       </tr>
+
+      <tr>
+           <td> <label class="text-form"> Password: </label></td>
+           <td> <input type="password" id="Password" name="Password" value=@Request["password"]> </td>
+            <td> <span style="font-family: Calibri; color: #218416; text-align: center">@Html.ValidationMessage("password")</span> </td>
+      </tr>
+
+      <tr>
+           <td> <label class="text-form"> Confirmed Password: </label></td>
+           <td> <input type="password" id="Confirmedpassword" name="Confirmedpassword" value=@Request["Confirmedpassword"]> </td>
+            <td> <span style="font-family: Calibri; color: #218416; text-align: center">@Html.ValidationMessage("Confirmedpassword")</span> </td>
+      </tr>
+         
+      <tr>
+           <td> <label class="text-form"> I am: </label></td>
+           <td> <select id="select_gender" name="select_gender">  value=@Request["select_gender"]
+               <option disabled="disabled" selected="selected">Select Gender</option>
+               <option> Male </option>
+               <option> Female </option>
+               </select>
+           </td>
+           <td> <span> </span> </td>
+       </tr>
+
+      <tr>
+           <td> <label class="text-form"> Birthday: </label></td>
+
+           <td> 
+               <select id="select_gender" name="select_gender">
+               <option selected="selected" disabled="disabled"> Month </option>
+               <option> Jan </option>
+               <option> Feb </option>
+               <option> March </option>
+               <option> April </option>
+               <option> May </option>
+               <option> Jun </option>
+               <option> July </option>
+               <option> Aug </option>
+               <option> Sep </option>
+               <option> Oct </option>
+               <option> Nov </option>
+               <option> Dec </option>
+               </select>
+           </td>
+
+           <td>
+               <select id="day">
+               <option selected="selected" disabled="disabled"> Day </option>
+                  
+                    @for(int i=1; i<=30; i++)
+                   {
+                       <option> @i </option> 
+                   }
+               </select>
+           </td>
+           
+
+            <td>
+               <select id="year" name="year">
+               <option selected="selected" disabled="disabled"> Year </option>
+             
+                   @for(int i=1905; i<2013; i++)
+                   {
+                       <option> @i </option> 
+                   }
+               </select>
+           </td>
+           <td> <span> </span> </td>
+       </tr>
+     </table>
+
+       <div class="mybutton" style="margin-left: 240px;margin-top: 20px">
+           <input type="submit" value="Submit" class="button" />   
+       </div> 
+   
+ </form>

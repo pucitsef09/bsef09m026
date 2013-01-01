@@ -1,0 +1,161 @@
+﻿@{
+   
+     Layout="~/shared/layout_admin.cshtml";
+
+     var db =  Database.Open("Online_shopping");
+     var query = "select * from users";
+     var data = db.Query(query);
+ 
+     if(IsPost)
+     {
+         if(Request["submit_button"]=="View Users Detail")  
+         {
+              Response.Redirect("~/Admin/ViewUsers");
+         }
+        
+         if(Request["submit_button"]=="View All Roles")
+         {
+              Response.Redirect("~/Admin/allRoles");
+         }
+
+         if(Request["submit_button"]=="Add User In Role")
+         {
+                Response.Redirect("~/Admin/Roles");
+         }
+
+         if(Request["submit_button"]=="Manage Users")
+         {
+              Response.Redirect("~/Admin/ManageUsers");
+         }
+
+         if(Request["submit_button"]=="Mange Categories")
+         {
+              Response.Redirect("~/Admin/category");
+         }
+        
+         if(Request["submit_button"]=="Manage Products")
+         {
+              Response.Redirect("~/Admin/product_admin");
+         }
+     }
+     var pagetitle = "View Users";
+}
+@section t1
+{
+    @pagetitle
+}
+
+<html>
+    <head> <title>Welcome to Admin Site</title>
+    <style>
+        
+        #container{
+	    width:100%;
+        height:auto;
+        background-color:#8398a7;
+        margin-top:2px;
+        }
+
+         #left {
+         width:16%;
+         height: 350px;
+         background-color:#000;
+         float:left;
+         padding-top:10px;
+         padding-left:5px;
+         margin-top: 20px;
+        }
+    
+        #center{
+        width:65.9%;
+        height: auto;
+        background-color:#808080;
+        float:left;
+        padding-left:5px;
+        padding-right:5px;
+        margin-top: 25px;
+        }
+        
+        td{
+        font-family:  Cambria; 
+        width: 10%;  
+        text-align: center; 
+        }
+
+        li{
+        margin-left: 22px;
+        color: #f9f6f6;
+        margin-top: 10px;
+        margin-bottom: 2px;
+        }
+
+        #right {
+        float: left;
+        background-color: #000;
+        width: 15%;
+        }
+        
+        .button{
+            height: 40px;
+            width: 190px;
+            margin: 15px;
+        }
+        
+</style>
+     </head>
+
+
+<body style="background-color: #000">
+
+             <form method="post">
+                   <div id="left">        
+                       <input type="submit" name="submit_button" value="Manage Users" class="button"/>
+                       <input type="submit" name="submit_button" value="Mange Categories" class="button"/>
+                       <input type="submit" name="submit_button" value="Manage Products" class="button"/>
+                   </div>
+            </form>
+
+
+            <div id="center">
+            
+                <div style="margin-top: 10px; margin-bottom: 5px; margin-left: 820px;">
+                   <a href="~/signup.cshtml"> <img src=@Href("~/Images/add.png") alt="Add User" title="Add New User"></a>
+                </div>
+            
+
+            <table>    
+                
+                 <tr>
+                     <td> <b> Username </b></td>   
+                     <td> <b>Email </b></td> 
+                     <td> <b>password </b></td> 
+                     <td> <b>Gender </b></td> 
+                     <td> <b>Creation Date </b></td>  
+                     <td> <b>Action </b></td> 
+  
+                 </tr>
+
+                 @foreach(var row in data)
+                 {
+                     <tr>
+                        <td> @row.Username </td>
+                        <td> @row.Email </td>
+                        <td> @row.Password </td>
+                        <td> @row.Gender </td>
+                        <td> @row.Createddate</td>
+                        <td><a href="@Href("DeleteUser", @row.Userid)"> <img src="@Href("~/Images/del.png")" alt="Delete" title="Delete User" style="margin-left: 08px;"></a> </td> 
+                     </tr>
+                 }
+
+             </table>
+        </div>
+
+    <form method="post">
+       <div id="right" style="margin-top: 20px;">        
+           <input type="submit" name="submit_button" value=" View Users Detail" class="button"/>
+           <input type="submit" name="submit_button" value="View All Roles" class="button"/>
+           <input type="submit" name="submit_button" value="Add User In Role" class="button"/>
+       </div>
+    </form>
+</body>
+</html>

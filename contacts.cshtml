@@ -1,0 +1,78 @@
+﻿@{
+    Layout="~/shared/layout.cshtml";
+    var pagetitle = "Contact Us";
+}
+@section t1
+{
+    @pagetitle
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="css/grid.css" type="text/css" media="screen">   
+    <script src="js/jquery-1.6.3.min.js" type="text/javascript"></script>
+    <script src="js/cufon-yui.js" type="text/javascript"></script>
+    <script src="js/cufon-replace.js" type="text/javascript"></script>
+	<script src="js/Kozuka_Gothic_Pro_OpenType_300.font.js" type="text/javascript"></script>
+    <script src="js/Kozuka_Gothic_Pro_OpenType_500.font.js" type="text/javascript"></script> 
+    <script src="js/FF-cash.js" type="text/javascript"></script>    
+	
+</head>
+
+<body id="page6">
+
+    <!--==============================content================================-->
+    <section id="content"><div class="ic"></div>
+        <div class="main">
+            <div class="container_12">
+                <div class="wrapper">
+                	<article class="grid_4">
+                    	<h3>Our Contacts</h3>
+                        <div class="img-indent-bot">
+                            <figure class="img-border2">
+                             <figure class="prev-indent-bot"><img src="images/location.jpg" alt="image not found"></figure>
+                            </figure>
+                            <div class="clear"></div>
+                        </div>
+                        <dl>
+                            <dt class="p1">Mall Road Lahore, Pakistan</dt>
+                            <dd><span>Freephone:</span>  +1 800 559 6580</dd>
+                            <dd><span>Telephone:</span>  +1 800 603 6035</dd>
+                            <dd><span>Fax:</span>  +1 800 889 9898</dd>
+                            <dd><span>Email:</span> <a href="#">123@pucit.edu.pk</a></dd>
+                        </dl>
+                    </article>
+                    <article class="grid_8">
+                    	<h3>Contact Form</h3>
+                        <form id="contact-form" method="post" enctype="multipart/form-data">                    
+                            <fieldset>
+                                  <label><span class="text-form">Your Name:</span><input type="text"></label>
+                                  <label><span class="text-form">Your Email:</span><input type="text"></label>                              
+                                  <div class="wrapper">
+                                    <div class="text-form">Your Message:</div>
+                                    <div class="extra-wrap">
+                                        <textarea></textarea>
+                                        <div class="clear"></div>
+                                        <div class="buttons">
+                                            <a class="button" onClick="document.getElementById('contact-form').reset()"><span>clear</span></a>
+                                            <a class="button" onClick="document.getElementById('contact-form').submit()"><span>send</span></a>
+                                        </div> 
+                                    </div>
+                                  </div>                            
+                            </fieldset>						
+                        </form>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+	
+</body>
+</html>

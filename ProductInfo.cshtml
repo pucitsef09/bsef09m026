@@ -1,0 +1,71 @@
+﻿@{
+  
+    Layout="~/shared/layout.cshtml";
+    var pagetitle = "Product";
+    var db =  Database.Open("Online_shopping");
+
+    <!-- getting Data in Productid variable-->
+    var id = UrlData[0];
+    if (id.IsEmpty()) {
+         Response.Redirect("~/product");
+    }
+    var Productid = id.AsInt();
+    var prod = db.QuerySingle("SELECT * FROM product WHERE Productid = @0", Productid);
+  
+    var Name    =prod.Productname;
+    var Image   =prod.Image;
+    var Price   =prod.price;
+    var Desc    =prod.Description;
+    var title   =prod.Title;
+
+
+}
+@section t1
+{
+    @pagetitle
+}
+
+
+
+    <!-- Display Images and Product Description after reading from Data Base-->
+   
+
+<form method="post" action="/Cart">
+<table>
+     <tr><td><img src=@Href(Image) alt="Image" style="height: 350px; width: 400px; margin-left: 300px;margin-top: 30px;"> <td>
+        <td >
+            <div style="margin-left: 50px; margin-top: 80px;font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;"><p> Name: @Name</p>
+                 <p style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;"> Title: @title </p>
+                 <p style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;"> Description: @Desc</p>
+                 <p style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;"> Price: @Price </p>
+                 <p style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;"> 
+                    
+                      <label> Select Size: </label>
+                     <select id="size" name="size">
+                          <option> Large </option>
+                          <option> Medium</option>
+                          <option> Small </option>
+                          <option> Extra Large </option>
+                     </select>
+                 </p>
+                 <p> @Facebook.LikeButton("http://www.facebook.com/step.friends",
+                           width:230,
+                           buttonLayout:"standard",
+                           height:25,
+                           showFaces:false)</p>
+                 <div class="mybutton" style="margin-left: 80px;margin-top: 30px">
+                  <input type="submit" value="Add To Cart" class="button" />     
+                 </div>
+                 @Html.Hidden("productID", @Productid)  
+                 @Html.Hidden("Productname", @Name)                 
+                 @Html.Hidden("price", @Price)
+            </div>
+        </td>
+          <td>
+        </td>
+     </tr>
+
+   
+</table>
+         
+</form>

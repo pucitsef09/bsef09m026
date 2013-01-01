@@ -1,0 +1,77 @@
+﻿@{
+    Layout="~/shared/layout_admin.cshtml";
+    var pagetitle = "Add Category";
+     var msg="";
+     var db =  Database.Open("Online_shopping");
+     
+     if(IsPost)
+     {
+         var title = Request["title"];
+         var description = Request["description"];
+
+         if (title.IsEmpty())
+         {
+             ModelState.AddError("title", "Title is required.");
+         }
+        
+         else if (description.IsEmpty())
+         {
+             ModelState.AddError("description", "Description is required.");
+         }
+
+          var query = "select * from categories where title=@0";
+          var row = db.QuerySingle(query, title);
+          
+             if(ModelState.IsValid)
+             {
+                 var insertquery = "Insert into categories(title,description)" + "values (@0,@1)";
+                 db.Execute(insertquery,title,description);
+                 Response.Redirect("~/Admin/category");
+             }
+         
+     }
+
+}
+
+@section t1
+{
+    @pagetitle
+}
+
+<h3 style="color: #218416; font-family: Cambria; margin-left: 50px; margin-top: 20px;"> Add Category </h3>
+
+ <form id="add_category" method="post" action="" style="border: groove; margin-top: 10px; margin-left: 300px; margin-right: 300px; height: 300px; width: 600px">                    
+           
+          <div style="font-family: Arial; color: #218416; border: initial; width: 500px; height: 50px; margin-left: 10px;"> @Html.ValidationSummary()</div>
+         
+         <fieldset>
+                 
+               <legend></legend>
+                 
+               <div style="margin-left: 120px;margin-top: 10px">
+                 <label><span class="text-form"> Category Title:</span></label>
+                 <input type="text" name="title" id="title" value=@Request["title"]>
+               </div>
+               
+
+              <div style="margin-left: 120px;margin-top: 20px">
+                 <label><span class="text-form"> Discription:</span></label>
+                 <textarea rows="4" cols="38" name="description" id="description">
+                 </textarea>
+              </div>
+            
+              </br>
+              
+             
+              <div class="mybutton" style="margin-left: 240px;margin-top: 20px">
+                  <input type="submit" value="Submit" class="button" />     
+               </div> 
+
+            @if(IsPost)
+            {
+                
+               <p> @msg </p>
+
+            }
+          </fieldset>						
+     </form>

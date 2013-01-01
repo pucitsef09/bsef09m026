@@ -1,0 +1,92 @@
+﻿@{
+      Layout="~/shared/layout_admin.cshtml";
+      var db = Database.Open("Online_shopping");
+      var id = UrlData[0];
+      var Productid = id.AsInt();
+      var query = "select * from product where Productid = @0";
+      var prod = db.QuerySingle(query, Productid);
+      
+
+      var title         =  prod.Title ;
+      var productname   =  prod.productname;
+      var description   =  prod.Description; 
+      var Category      =  prod.Cateogory;
+      var price         =  prod.Price;
+      var Quantity      =  prod.Quantity;
+      var image         =  prod.Image;
+      
+      if(IsPost)
+      {    
+                var uTitle          = Request["Title"];
+                var uproductname    = Request["productname"];
+                var udescription    = Request ["description"];
+                var uCategory       = Request ["category"];
+                var uprice          = Request["Price"];
+                var uQuantity       = Request["Quantity"];
+                var uimage          = Request ["Image"]; 
+
+                 var insertquery = "update product set Cateogory=@0,Productname=@1,Title=@2,Description=@3,Price=@4,Quantity=@5 where Productid=@6";
+                 db.Execute(insertquery,uCategory,uproductname,uTitle,udescription,uprice,uQuantity,Productid);
+                 Response.Redirect("~/Admin/product_admin");
+
+      }
+
+      var pagetitle = "Update Product";
+
+}
+
+@section t1
+{
+    @pagetitle
+}
+
+ <form method="post" action="" name="form" style="background-color: #bbdfc0; border: groove; margin-left: 350px; margin-right: 300px; height: 650px; width: 500px; margin-top: 50px; padding-left: 50px; padding-top: 40px;"> 
+       
+            <p> <label style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;"> Update the Product</label></p>
+            <p><img src=@Href(image) alt="Image" style="margin-bottom: 35px;margin-left: 80px; margin-right: 30px; height: 220px; width: 250px;"/></p>
+       
+     <table>        
+             <tr>       
+                <td><label style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;">Category:</label></td>
+                @{
+                    var query_cat = "select * from categories";
+                    var data_cat = db.Query(query_cat);
+                }
+               <td> <select name="category" id=" category">
+                     <option>@Category</option>
+                 
+                       @foreach(var row in data_cat)
+                       {
+                           <option> @row.title </option>
+                       }
+                    </select> </td>
+             </tr>      
+          
+             <tr>
+                <td><label style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;">Name:</label></td>
+                <td><input type="text" name="productname" id="productname" value=@productname></td>
+             </tr>
+             
+             <tr>
+                <td><label style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;">Title:</label></td>
+                <td><input type="text" name="Title" id="Title" value=@title/></td>
+             </tr>
+             
+             <tr>
+                <td><label style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;"> Description: </label></td>
+                <td><textarea rows="4" cols="38" name="description" id="description">@description</textarea> </td>
+             </tr>
+
+             <tr>
+                <td><label style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;">Price:</label></td>
+                <td><input type="text" name="price" id="price" value=@price></td>
+             </tr>
+           
+             <tr>
+                <td><label style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;">Quantity:</label></td>
+                <td><input type="text" name="Quantity" id="Quantity" value= @Quantity></td>
+             </tr>
+      </table>
+            <p><input type="submit" value="Update" name="submit"  style="background-color: #22ad3e; color: #fcf4f4; font-family: 'Bodoni MT'; font-size: 16px;border-radius: 10px; margin-left: 180px; margin-top:20px; padding-left: 12px; padding-right: 12px; padding-top: 5px; padding-bottom: 5px;"/></p>
+
+   </form>

@@ -1,0 +1,75 @@
+﻿@{
+        
+        Layout="~/shared/layout_admin.cshtml";
+
+        var roleName = Request["roleName"];
+        if(IsPost)
+        {
+            // Assign user to role
+            var userName = Request["newUser"];
+       
+            if (!Roles.IsUserInRole(userName, roleName))
+            {
+                Roles.AddUsersToRoles(
+                new [] { userName }.ToArray(),
+                new [] { roleName }.ToArray()
+                );
+            }
+          
+        }
+
+        // Get all current role members
+        var usersInRole = Roles.GetUsersInRole(roleName);
+        // Get all users from database and create a list of SelectListItems
+        var db = Database.Open("Online_shopping");
+        var sqlCommand = "SELECT username FROM userprofile ORDER BY username";
+        List<SelectListItem> allUsers = new List<SelectListItem>();
+        
+        foreach(var item in db.Query(sqlCommand))
+        {
+             allUsers.Add(new SelectListItem { Text = item.username });
+        }
+
+        var pagetitle = "Role Details";
+}
+
+@section t1
+{
+    @pagetitle
+}
+
+
+        <p style="margin-left: 200px; color: #0f5e1a; margin-top: 30px; margin-bottom: 10px;"> <b> Details - @roleName </b></p>
+        <div>
+        @if(usersInRole.Length > 0)
+        {
+            @* List all current role members *@
+            <ul>
+                @foreach(var user in usersInRole)
+                {
+                <li style="margin-left: 250px; margin-top: 30px; margin-bottom: 10px;">@user
+                    <a href="removeUserFromRole?roleName=@roleName&userName=@user">
+                    [Remove]
+                </a>
+                </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p style="margin-left: 250px;margin-bottom: 10px;">No users currently attached to this role.</p>
+            <p style="margin-left: 200px;"><a href="deleteRole?roleName=@roleName">Delete this role</a></p>
+        }
+        </div>
+       
+        <div>
+            @* Form to assign users to the current role *@
+             <h2 style="margin-left: 200px; color: #0f5e1a; margin-bottom: 15px; margin-top: 20px;"> Add Users </h2>
+            <form action="roleDetails" method="post" style="margin-left: 260px;">
+                @Html.Hidden("roleName", roleName)
+                @Html.Label("User: ", "newUser")
+                @Html.DropDownList("newUser", allUsers)
+                <input type="submit" value="Add User" name="addUser"  style="margin-bottom: 50px;"/>
+            </form>
+        </div>
+          

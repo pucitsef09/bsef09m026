@@ -1,0 +1,29 @@
+﻿
+       <header>
+    	<div class="menu-row">
+        	<div class="main">
+            	<nav class="wrapper">
+                    
+                    <ul class="menu">
+                        <li><a class="active" href="@Href("~/Default.cshtml")">Home</a></li>
+                        <li><a href="@Href("~/product.cshtml")"> Products </a></li>
+                        <li><a href="@Href("~/Cart.cshtml")">Shopping Cart</a></li> 
+                        <li><a href="@Href("~/about.cshtml")">About us</a></li>
+                        <li><a href="@Href("~/contacts.cshtml")">Contacts</a></li>
+                       
+                    </ul>
+                     <div id="accountSummary" style="margin-top: 25px;">@MembershipHelper.AccountSummary()</div>
+                </nav>
+            </div>
+        </div>
+    	<div class="row-bot">
+            <div class="row-bot-bg">
+                <div class="main">
+                    <div class="wrapper">
+                        <h2>Online Shopping</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+

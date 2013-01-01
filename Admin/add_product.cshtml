@@ -1,0 +1,125 @@
+﻿@{   
+       Layout="~/shared/layout_admin.cshtml";
+
+       Validation.RequireField("category","Please Select Category");
+       Validation.RequireField("productname","Please Enter Product Name");
+       Validation.RequireField("Title","Please Enter Product Title");
+       Validation.RequireField("description","Please Enter Product Description");
+       Validation.RequireField("price","Please Enter Product Price");
+       Validation.Add("price",Validator.Integer("Price must be an integer"));
+       Validation.RequireField("Quantity","Please Enter Product Quantity");
+       Validation.Add("Quantity",Validator.Integer("Quantity must be an integer"));
+
+       WebImage photo = null;
+       var newFileName = "";
+       var imagePath = "";
+
+       var db =  Database.Open("Online_shopping");
+       var query = "select * from categories";
+       var data = db.Query(query);
+
+       if(IsPost)
+       {
+           if(Validation.IsValid())
+           {
+               var category = Request["category"];
+               var productname = Request["productname"];
+               var Title = Request["Title"];
+               var description = Request["description"];
+               var price = Request["price"];
+               var Quantity = Request["Quantity"];
+
+              <p> "File Count  = " @Request.Files.Count </p>
+              photo = WebImage.GetImageFromRequest();
+          
+           
+                if(photo != null)
+                {
+
+                    newFileName =  Path.GetFileName(photo.FileName);
+            
+                    imagePath = @"images\" + newFileName;
+                    photo.Save(@"~\" + imagePath);
+                }
+
+               var Image = "~/images/" + newFileName;
+
+                if(ModelState.IsValid)
+                {
+                     var insertquery = "Insert into product(Cateogory,Productname,Title,Description,Price,Quantity,Image)" + "values (@0,@1,@2,@3,@4,@5,@6)";
+                     db.Execute(insertquery,category,productname,Title,description,price,Quantity,Image);
+                     Response.Redirect("~/Admin/product_admin");
+                }
+             }
+
+       }
+       var pagetitle = "Add Product";
+}
+@section t1
+{
+    @pagetitle
+}
+    
+ <form id="add_category" method="post" enctype="multipart/form-data" action="" style=" margin-top: 10px; margin-left: 300px; margin-right: 300px; height: 400px; width: 600px">                    
+      
+         <fieldset>
+                 
+               <legend></legend>
+                
+              <div style="margin-left: 120px;margin-top: 50px">
+                 <label><span class="text-form"> Category:</span></label>
+                 <select name="category" id=" category">
+                     <option disabled="disabled" selected="selected">Select Category</option>
+                 
+                       @foreach(var row in data)
+                       {
+                           <option> @row.title </option>
+                       }
+                 </select>
+                  <label style="font-family:Arial, Helvetica, sans-serif; color: #218416; font-size: 12px;">@Html.ValidationMessage("category")</label>
+               </div>
+
+
+               <div style="margin-left: 120px;margin-top: 10px">
+                 <label><span class="text-form"> Product Name:</span></label>
+                 <input type="text" name="productname" id="productname" value=@Request["productname"]>
+                     <label style="font-family:Arial, Helvetica, sans-serif; color: #218416; font-size: 12px;">@Html.ValidationMessage("productname")</label>
+               </div>
+               
+             <div style="margin-left: 120px;margin-top: 10px">
+                 <label><span class="text-form"> Product Title:</span></label>
+                 <input type="text" name="Title" id="Title" value=@Request["Title"]>
+                 <label style="font-family:Arial, Helvetica, sans-serif; color: #218416; font-size: 12px;">@Html.ValidationMessage("Title")</label>
+               </div>
+
+              <div style="margin-left: 120px;margin-top: 20px">
+                 <label><span class="text-form"> Discription:</span></label>
+                 <textarea rows="4" cols="38" name="description" id="description">
+                 </textarea>
+                   <label style="font-family:Arial, Helvetica, sans-serif; color: #218416; font-size: 12px;">@Html.ValidationMessage("description")</label>
+              </div>
+            
+              <div style="margin-left: 120px;margin-top: 10px">
+                 <label><span class="text-form"> Price:</span></label>
+                 <input type="text" name="price" id="price" value=@Request["price"]>
+                  <label style="font-family:Arial, Helvetica, sans-serif; color: #218416; font-size: 12px;">@Html.ValidationMessage("price")</label>
+               </div>
+
+             <div style="margin-left: 120px;margin-top: 10px">
+                 <label><span class="text-form"> Quantity:</span></label>
+                 <input type="text" name="Quantity" id="Quantity" value=@Request["Quantity"]>
+                  <label style="font-family:Arial, Helvetica, sans-serif; color: #218416; font-size: 12px;">@Html.ValidationMessage("Quantity")</label>
+             </div>
+
+             <div style="margin-left: 120px;margin-top: 10px">
+                 <label><span class="text-form"> Image Upload:</span></label>
+                 <input type="file" name="image" id="image" value=@Request["image"]>
+             </div>
+
+              </br>
+                          
+              <div class="mybutton" style="margin-left: 240px;margin-top: 20px">
+                  <input type="submit" value="Add Product" class="button" />     
+             </div>
+  </fieldset>						
+     </form>

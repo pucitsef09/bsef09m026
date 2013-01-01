@@ -1,0 +1,8 @@
+﻿@{
+     Layout="~/shared/layout.cshtml";
+     Cart cart = (Cart)Session["cart"]; 
+     cart.Clear(); 
+     WebSecurity.Logout();
+     Response.Redirect("Default");
+}
+

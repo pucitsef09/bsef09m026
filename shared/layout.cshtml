@@ -1,0 +1,35 @@
+﻿@{
+    
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title> @RenderSection("t1",required:false)</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="@Href("~/css/reset.css")" type="text/css" media="screen">
+    <link rel="stylesheet" href="@Href("~/css/style.css")" type="text/css" media="screen">
+    <link rel="stylesheet" href="@Href("~/css/grid.css")" type="text/css" media="screen">   
+    <script src="js/jquery-1.6.3.min.js" type="text/javascript"></script>
+    <script src="js/cufon-yui.js" type="text/javascript"></script>
+    <script src="js/cufon-replace.js" type="text/javascript"></script>
+	<script src="js/Kozuka_Gothic_Pro_OpenType_300.font.js" type="text/javascript"></script>
+    <script src="js/Kozuka_Gothic_Pro_OpenType_500.font.js" type="text/javascript"></script> 
+    <script src="js/FF-cash.js" type="text/javascript"></script>    
+
+
+    <script src="js/jquery-1.6.2.js"></script>
+    <script src="js/jquery.validate.js"> </script>
+    <script src="js/jquery.validate.unobtrusive.js"></script>
+
+</head>
+
+   <body>
+       @RenderPage("~/Shared/header.cshtml")
+       @RenderBody()
+       @RenderPage("~/Shared/footer.cshtml")
+   </body>
+
+</html>
+

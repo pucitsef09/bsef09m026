@@ -1,0 +1,107 @@
+﻿@{
+     Layout="~/shared/layout_admin.cshtml";
+
+     var db =  Database.Open("Online_shopping");
+     var query = "select * from users";
+     var data = db.Query(query);
+
+      if(IsPost)
+        {
+             if(Request["submit_button"]=="Manage Users")
+             {
+                  Response.Redirect("~/Admin/ManageUsers");
+             }
+
+             if(Request["submit_button"]=="Mange Categories")
+             {
+                  Response.Redirect("~/Admin/category");
+             }
+        
+             if(Request["submit_button"]=="Manage Products")
+             {
+                  Response.Redirect("~/Admin/product_admin");
+             }
+        }
+
+    var pagetitle = "Admin Panel";
+
+}
+@section t1
+{
+    @pagetitle
+}
+
+<html>
+    <head> <title>Welcome to Admin Site</title>
+    <style>
+        
+    #container{
+	width:100%;
+    height:auto;
+    background-color:#8398a7;
+    margin-top:2px;
+
+}
+
+    #left {
+     width:16%;
+     height: 350px;
+     background-color:#000;
+     float:left;
+     padding-top:10px;
+     padding-left:5px;
+     margin-top: 20px;
+}
+    
+    #center{
+      width:81.9%;
+      height: auto;
+      background-color:#000;
+      float:left;
+      padding-left:5px;
+      padding-right:5px;
+      margin-top: 22px;
+}
+        
+        td{
+         font-family:  Cambria; 
+         width: 10%;  
+         text-align: center; 
+        }
+
+li{
+        margin-left: 22px;
+        color: #f9f6f6;
+        margin-top: 10px;
+        margin-bottom: 2px;
+        }
+        
+         .button{
+            height: 40px;
+            width: 190px;
+            margin: 15px;
+        }
+        
+</style>
+     </head>
+
+
+<body style="background-color: #000">
+
+
+<div id="container">
+        <form method="post">
+                   <div id="left">        
+                       <input type="submit" name="submit_button" value="Manage Users" class="button" />
+                       <input type="submit" name="submit_button" value="Mange Categories" class="button"/>
+                       <input type="submit" name="submit_button" value="Manage Products" class="button"/>
+                   </div>
+           </form>
+
+        <div id="center">
+             <a href="add_category.cshtml"> <img src="@Href("~/Images/Admin.jpg")" alt="Add Category"></a>
+        </div>
+ 
+    </div>
+</body>
+</html>

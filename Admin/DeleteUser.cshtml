@@ -1,0 +1,42 @@
+﻿@{
+      Layout="~/shared/layout_admin.cshtml";
+     
+      var db = Database.Open("Online_shopping");
+      var id = UrlData[0];
+      var Userid = id.AsInt();
+
+      var query = "select * from users where Userid = @0";
+      var user = db.QuerySingle(query, Userid);
+      
+      var Username =   user.Username ;
+      var Email   =   user.Email;
+      var Password =   user.Password;
+      var Gender   =   user.Gender;
+      
+      if(IsPost)
+      {
+                var deleteQueryString = "DELETE FROM users WHERE Userid = @0";
+                db.Execute(deleteQueryString, Userid);
+                var deleteQueryString2 = "DELETE FROM userprofile WHERE Userid = @0";
+                db.Execute(deleteQueryString2, Userid);
+                Response.Redirect("~/Admin/ViewUsers");
+      }
+
+      var pagetitle = "Delete User";
+
+}
+
+@section t1
+{
+    @pagetitle
+}
+
+  3 <form method="post" action="" name="form" style="background-color: #bbdfc0; border: groove; margin-top: 10px; margin-left: 300px; margin-right: 300px; height: 250px; width: 500px; margin-top: 100px; padding-left: 50px; padding-top: 40px;"> 
+       
+            <p> <label style="font-family:'Bodoni MT'; font-size: 20px; font-style: italic;"> Are you sure you want to delete the following User? </label></p>
+            <p><label style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;">UserName:</label> @Username<br/>
+            <p><label style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;"> Email: </label>@Email </p>
+            <p><label style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;"> Password: </label>@Password </p>
+            <p><label style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;"> Gender: </label>@Gender </p>
+            <p><input type="submit" value="Delete" name="submit"  style="background-color: #22ad3e; color: #fcf4f4; font-family: 'Bodoni MT'; font-size: 16px;border-radius: 10px; margin-left: 180px; padding-left: 12px; padding-right: 12px; padding-top: 5px; padding-bottom: 5px;"/></p>
+   </form>

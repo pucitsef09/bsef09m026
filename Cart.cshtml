@@ -1,0 +1,104 @@
+﻿@{
+    Layout="~/shared/layout.cshtml";
+
+    var pagetitle = "Cart";
+
+    // Create a blank cart in Session if not present
+    if (Session["cart"] == null)
+    {
+           Session["cart"] = new Cart();
+    }
+
+    // Get current cart from Session
+    Cart cart = (Cart)Session["cart"];
+
+    if (IsPost)
+    {
+       
+        if (Request["productID"] != null)
+        {
+            // Form posted from Product Details Page
+            var Productid= Request["Productid"];
+            var Productname = Request["Productname"];
+            var size = Request["size"];
+            var Price = Request["Price"];
+            cart.AddItem(Productid.AsInt(),size,Productname,Price.AsDecimal());
+
+        }
+        else if (Request["removeIndex"] != null)
+        {
+            // Form posted by Cart Remove Item button
+            var removeIndex = Request["removeIndex"].AsInt();
+            cart.RemoveItem(removeIndex);
+        }
+
+        if(Request["submit_btn"]=="Continue Shopping")
+        {
+            Response.Redirect("~/product");
+        }
+
+        if(Request["submit_btn"]=="Proceed to Checkout")
+        {
+            Response.Redirect("~/Checkout");
+        }
+    }
+     Session["productList"] = cart; 
+
+}
+@section t1
+{
+    @pagetitle
+}
+
+  <h2 style="margin-left: 200px; margin-top: 40px; margin-bottom: 20px; font-family: Arial, Helvetica, sans-serif; color: #218416;">Shopping Cart</h2>
+       
+        
+        @if(cart.Items.Count() == 0)
+        {
+            <div style="margin-left: 250px; margin-top: 20px; margin-bottom: 20px; font-family: Arial, Helvetica, sans-serif;font-weight: 300; font-size: 16px; margin-bottom: 200px;">There are no items in your shopping cart</div>
+        }
+
+        else 
+        {
+          <text>
+                   <table id="cartTable">
+                            <tr>
+                                <th class="product">Productname</th>
+                                <th class="size">Size</th>
+                                <th class="price">Price</th>
+                                <th>&nbsp;</th>
+                            </tr>
+
+                            @{
+                            // Declare and initialise index variable, i
+                            int i = 0;
+                            }
+               
+                            @foreach (var item in cart.Items)
+                            {
+                            <tr>
+                                <td class="product">@item.Productname</td>
+                                <td class="size">@item.Size</td>
+                                <td class="price">£@item.Price</td>
+                                <td class="remove">
+                              <form action="Cart" method="post">
+                                @Html.Hidden("removeIndex", i)
+                                <input type="submit" value="Remove" />
+                                </form>
+                                </td>
+                            </tr>
+
+                            // increment index
+                            i++;
+                            }
+
+                </table> 
+
+               <form method="post">
+                    <div class="mybutton" style="margin-left: 550px;margin-top: 50px; margin-bottom: 40px;">
+                              <input type="submit" name="submit_btn" value="Continue Shopping" class="button" />
+                              <input type="submit" name="submit_btn" value="Proceed to Checkout" class="button" />     
+                    </div>
+              </form>
+        </text>
+       }      

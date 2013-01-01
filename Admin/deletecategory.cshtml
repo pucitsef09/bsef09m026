@@ -1,0 +1,50 @@
+﻿@{
+     Layout="~/shared/layout_admin.cshtml";
+      var db = Database.Open("Online_shopping");
+      var id = UrlData[0];
+      var msg="";
+      var categoryid = id.AsInt();
+      msg += @"id of category is " + categoryid;
+    
+      var query = "select * from categories where categoryid = @0";
+      var category = db.QuerySingle(query, categoryid);
+      
+      var title =  category.title ;
+      var description = category.description; 
+      
+      if(IsPost)
+      {
+               if(Request["submit"]=="Delete")
+               {
+                        var deleteQueryString = "DELETE FROM categories WHERE categoryid = @0";
+                        db.Execute(deleteQueryString, categoryid);
+                        var deleteQueryString1 = "DELETE FROM product WHERE Cateogory= @0";
+                        db.Execute(deleteQueryString1, title);
+                        Response.Redirect("~/Admin/category");
+               }
+
+               if(Request["submit"]=="Cancel")
+               {
+                        Response.Redirect("~/Admin/category");
+               }
+
+      }
+
+      var pagetitle = "Delete Category";
+
+}
+
+@section t1
+{
+    @pagetitle
+}
+  
+    <form method="post" action="" name="form" style="background-color: #bbdfc0; border: groove; margin-top: 10px; margin-left: 300px; margin-right: 300px; height: 250px; width: 500px; margin-top: 100px; padding-left: 50px; padding-top: 40px;"> 
+       
+            <p> <label style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;"> Are you sure you want to delete the following category? </label></p>
+            <p><label style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;">Name:</label> @title<br/>
+            <p><label style="font-family: 'Bodoni MT'; font-size: 20px; font-style: italic;"> Description: </label>@description </p>
+            <p><input type="submit" value="Delete" name="submit"  style="background-color: #22ad3e; color: #fcf4f4; font-family: 'Bodoni MT'; font-size: 16px;border-radius: 20px; margin-left: 150px; padding-left: 12px; padding-right: 12px; padding-top: 5px; padding-bottom: 5px;"/>
+            <input type="submit" value="Cancel" name="submit"  style="background-color: #22ad3e; color: #fcf4f4; font-family: 'Bodoni MT'; font-size: 16px;border-radius: 20px; margin-left: 15px; padding-left: 12px; padding-right: 12px; padding-top: 5px; padding-bottom: 5px;"/>
+            </p>
+   </form>

@@ -1,0 +1,69 @@
+﻿@{
+     Layout="~/shared/layout.cshtml";
+     var pagetitle = "Login";
+     
+     Validation.RequireField("username","Please Enter Username");
+     Validation.RequireField("password","Please Enter Password");
+
+    if(IsPost)
+    {
+         if(Validation.IsValid())
+         {
+             var username = Request["username"];
+             var password = Request["password"];
+                 
+                 if(username=="Admin")
+                 { 
+                     if(password=="123")
+                     {
+                      Response.Redirect("~/Admin/admin_panel.cshtml");
+                      }
+                 }
+                 else if(WebSecurity.Login(username, password))
+                 {
+                     Session["productList"] = new Dictionary<string, int>();
+                     Response.Redirect("Default");
+                 }
+                 else
+                 {
+                     ModelState.AddFormError("Unable to log in.");
+                 }
+             
+         }
+    }
+}
+@section t1
+{
+    @pagetitle
+}
+
+
+
+     <form id="login" method="post" action="" style=" margin-top: 100px; margin-left: 300px; margin-right: 300px; height: 400px; width: 600px">                    
+           
+          <div style="font-family: Arial; color: #218416; border: initial; width: 500px; height: 50px; margin-top: 5px; margin-left: 10px;"> @Html.ValidationSummary()</div>
+          <fieldset>
+                 <legend></legend>
+                 
+               <div style="margin-left: 120px;margin-top: 10px">
+                 <label><span class="text-form"> Username:</span></label>
+                 <input type="text" name="username" id="username" value=@Request["username"]> <!--value="enter username" onFocus="if (value == 'enter username') {value=''}" onBlur="if (value== '') {value='enter username'}" size="18"-->
+               </div>
+               
+
+              <div style="margin-left: 120px;margin-top: 20px">
+                 <label><span class="text-form"> Password:</span></label>
+                 <input type="password" name="password" value=@Request["password"]>
+              </div>
+            
+
+              <div class="mybutton" style="margin-left: 240px;margin-top: 20px">
+                 <input type="submit" value="Login" class="button" />
+              </div> 
+
+          </fieldset>						
+     </form>
+
+ 
+
+
